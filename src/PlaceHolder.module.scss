@@ -1,0 +1,49 @@
+.image {
+  flex: 1;
+  align-items: center;
+  width: 100%;
+  background-color: red;
+}
+
+.container {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 40px;
+  width: 100%;
+}
+
+.buttonContainer {
+  width: 80%;
+}
+
+.title {
+  padding: 0 40px;
+  margin-top: 300px;
+  text-align: center;
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+.buttonFirst {
+  text-align: center;
+  padding: 14px 40px;
+  background-color: #fff;
+  margin-bottom: 10px;
+  border-radius: 50px;
+}
+
+.buttonSecond {
+  text-align: center;
+  padding: 14px 40px;
+  background-color: #fff;
+  margin-bottom: 50px;
+  border-radius: 50px;
+}
+
+.buttonText {
+  text-align: center;
+}
