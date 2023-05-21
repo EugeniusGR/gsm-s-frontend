@@ -9,6 +9,8 @@ import {
 } from '@react-navigation/bottom-tabs';
 import HomeScreen from './src/HomeScreen';
 import NotifcationScreen from './src/NotifcationScreen';
+import { RecoilRoot } from 'recoil';
+import Register from './src/Register';
 
 const StackLogin = createNativeStackNavigator();
 
@@ -22,6 +24,7 @@ function LoginFlowScreen(): JSX.Element {
     >
       <StackLogin.Screen name="Welcome" component={PlaceHolder} />
       <StackLogin.Screen name="Login" component={Login} />
+      <StackLogin.Screen name="Register" component={Register} />
     </StackLogin.Navigator>
   );
 }
@@ -57,20 +60,41 @@ function NotificationsFlowScreen(): JSX.Element {
   );
 }
 
-const Tab = createBottomTabNavigator();
+const MainApp = createBottomTabNavigator();
+function MainAppScreen(): JSX.Element {
+  return (
+    <RecoilRoot>
+      <MainApp.Navigator
+        screenOptions={{ headerShown: false }}
+        initialRouteName="Home"
+        tabBar={(props) => <BottomTabBar {...props} />}
+      >
+        <MainApp.Screen name="Home" component={HomeFlowScreen} />
+        <MainApp.Screen
+          name="Notifications"
+          component={NotificationsFlowScreen}
+        />
+      </MainApp.Navigator>
+    </RecoilRoot>
+  );
+}
+const AppScreen = createNativeStackNavigator();
 
 function App(): JSX.Element {
   return (
-    <NavigationContainer independent={true}>
-      <Tab.Navigator
-        screenOptions={{ headerShown: false }}
-        initialRouteName="Account"
-      >
-        <Tab.Screen name="Home" component={HomeFlowScreen} />
-        <Tab.Screen name="Notifications" component={NotificationsFlowScreen} />
-        <Tab.Screen name="Log Out" component={LoginFlowScreen} />
-      </Tab.Navigator>
-    </NavigationContainer>
+    <RecoilRoot>
+      <NavigationContainer independent={true}>
+        <AppScreen.Navigator
+          screenOptions={{
+            headerShown: false,
+          }}
+          initialRouteName="LoginFlow"
+        >
+          <AppScreen.Screen name="LoginFlow" component={LoginFlowScreen} />
+          <AppScreen.Screen name="MainApp" component={MainAppScreen} />
+        </AppScreen.Navigator>
+      </NavigationContainer>
+    </RecoilRoot>
   );
 }
 

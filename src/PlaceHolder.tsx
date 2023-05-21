@@ -52,7 +52,9 @@ const PlaceHolder = ({ navigation }: any) => {
             <TouchableOpacity
               activeOpacity={0.9}
               style={styles.buttonSecond}
-              onPress={() => {}}
+              onPress={() => {
+                navigation.navigate('Register');
+              }}
             >
               <Text style={styles.buttonText}>Register</Text>
             </TouchableOpacity>

@@ -13,13 +13,18 @@ export const createUser = async ({
   country,
   fullName,
 }: CreateUserParams) => {
-  const response = await instance.post('/create-user', {
-    email,
-    password,
-    country,
-    fullName,
-  });
-  console.log(response);
+  return await instance
+    .post('/create-user', {
+      email,
+      password,
+      country,
+      fullName,
+    })
+    .then((el) => el.data)
+    .catch((error) => {
+      console.log('error', error.message);
+      return false;
+    });
 };
 
 type LoginParams = {
@@ -28,18 +33,75 @@ type LoginParams = {
 };
 
 export const loginUser = async ({ email, password }: LoginParams) => {
-  const response = await instance
+  return await instance
     .get('/login', {
       params: {
         email,
         password,
       },
     })
-    .then((el) => console.log(el))
+    .then((el) => el.data)
     .catch((error) => {
-      console.log(JSON.stringify(error));
-      console.log(error.body);
-      console.log(error.message);
-      console.log(error.data);
+      return false;
+    });
+};
+
+export const getSensorData = async (userId: string) => {
+  return await instance
+    .get('/get-sensor-data', {
+      params: {
+        userId,
+      },
+    })
+    .then((el) => el.data)
+    .catch((error) => {
+      console.log('error', error.message);
+      return false;
+    });
+};
+
+export const getNotifications = async (userId: string) => {
+  return await instance
+    .get('/get-notifications-data', {
+      params: {
+        userId,
+      },
+    })
+    .then((el) => el.data)
+    .catch((error) => {
+      console.log('error', error.message);
+      return false;
+    });
+};
+
+export const logSensorData = async (sensorData: {
+  sensorId: string;
+  temperature: string;
+  isMove: boolean;
+  isSound: boolean;
+  isGus: boolean;
+  isOn: boolean;
+  userId: string;
+}) => {
+  return await instance
+    .post('/log-sensor', sensorData)
+    .then((el) => el.data)
+    .catch((error) => {
+      console.log('error', error.message);
+      return false;
+    });
+};
+
+export const getUserData = async (userId: string) => {
+  return await instance
+    .get('/get-user', {
+      params: {
+        userId,
+      },
+    })
+    .then((el) => el.data)
+    .catch((error) => {
+      console.log('error', error.message);
+      return false;
     });
 };

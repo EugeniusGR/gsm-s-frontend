@@ -11,38 +11,63 @@ import {
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { useRecoilState } from 'recoil';
 import { userIdState } from '../store';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Login = ({ navigation }: any) => {
-  const [userEmail, setUserEmail] = React.useState('');
-  const [userPassword, setUserPassword] = React.useState('');
+const Register = ({ navigation }: any) => {
+  const [fullName, setFullName] = React.useState('');
+  const [email, setEmail] = React.useState('');
+  const [country, setCountry] = React.useState('');
+  const [password, setPassword] = React.useState('');
   const [userId, setUserId] = useRecoilState(userIdState);
 
   useEffect(() => {
-    const clearUserId = async () => {
-      await AsyncStorage.setItem('userId', '');
-      setUserId('');
-    };
-
-    clearUserId();
+    setUserId('');
   }, []);
 
-  const submitLogin = async () => {
-    // { email: userEmail, password: userPassword }
-    const res = await loginUser({
-      email: userEmail,
-      password: userPassword,
+  const regExEmailValidation = `^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+.[a-zA-Z]$`;
+
+  const submitCreateUser = async () => {
+    const isValidated = () => {
+      if (!fullName) {
+        Alert.alert('Error', 'Please enter your full name');
+        return false;
+      }
+      if (!email) {
+        Alert.alert('Error', 'Please enter your email');
+        return false;
+      }
+      if (!email.match(regExEmailValidation)) {
+        Alert.alert('Error', 'Please enter a valid email');
+        return false;
+      }
+      if (!country) {
+        Alert.alert('Error', 'Please enter your country');
+        return false;
+      }
+      if (!password) {
+        Alert.alert('Error', 'Please enter your password');
+        return false;
+      }
+      if (password?.length < 6) {
+        Alert.alert('Error', 'Password must be at least 6 characters long');
+
+        return false;
+      }
+      return true;
+    };
+    const isValid = isValidated();
+    if (!isValid) {
+      return;
+    }
+    const user = await createUser({
+      fullName,
+      password,
+      country,
+      email,
     });
-    console.log('res');
-    console.log(res._id);
-    if (res) {
-      await AsyncStorage.setItem('userId', res._id);
-      setUserEmail('');
-      setUserPassword('');
-      setUserId(res._id);
-      navigation.navigate('MainApp');
+    if (user) {
+      navigation.navigate('Login');
     } else {
-      Alert.alert('Error', 'Wrong email or password');
+      Alert.alert('Error', 'Something went wrong, please try again later');
     }
   };
 
@@ -74,19 +99,31 @@ const Login = ({ navigation }: any) => {
           <View style={styles.inputsContainer}>
             <Text style={styles.label}>Email:</Text>
             <TextInput
-              value={userEmail}
-              onChangeText={(text) => setUserEmail(text.toLocaleLowerCase())}
+              value={email}
+              onChangeText={(text) => setEmail(text.toLocaleLowerCase())}
               style={styles.input}
             />
             <Text style={styles.label}>Password:</Text>
             <TextInput
-              value={userPassword}
-              onChangeText={(text) => setUserPassword(text)}
+              value={password}
+              onChangeText={(text) => setPassword(text)}
               style={styles.input}
               secureTextEntry={true}
             />
+            <Text style={styles.label}>County:</Text>
+            <TextInput
+              value={country}
+              onChangeText={(text) => setCountry(text)}
+              style={styles.input}
+            />
+            <Text style={styles.label}>Full Name:</Text>
+            <TextInput
+              value={fullName}
+              onChangeText={(text) => setFullName(text)}
+              style={styles.input}
+            />
             <View style={styles.button}>
-              <Button onPress={submitLogin} title="Enter" />
+              <Button onPress={submitCreateUser} title="Create Account" />
             </View>
           </View>
         </View>
@@ -138,4 +175,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+export default Register;
